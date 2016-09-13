@@ -56,54 +56,57 @@ public class TimetableActivity extends AppCompatActivity
         final TableLayout tableLayout_create = (TableLayout) findViewById(R.id.TableLayout);
         final int rows = 50;
 
-        // Set layout
-        TableLayout.LayoutParams rowLayout = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
-                TableLayout.LayoutParams.WRAP_CONTENT);
-        rowLayout.setMargins(getResources().getInteger(R.integer.table_row_left),
-                getResources().getInteger(R.integer.table_row_top),
-                getResources().getInteger(R.integer.table_row_right),
-                getResources().getInteger(R.integer.table_row_bottom));
 
-        TypedValue weight = new TypedValue();
         for (int i = 0; i < rows; i++) {
-            TableRow row = new TableRow(this);
-            row.setLayoutParams(rowLayout);
-
-            TextView cellNumber = new TextView(this);
-            cellNumber.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.table_font_size));
-            cellNumber.setGravity(Gravity.CENTER);
-            String formattedName = String.format(Locale.US, "%04d", i);
-            cellNumber.setText(formattedName);
-            getResources().getValue(R.dimen.cell1_weight, weight, true);
-            row.addView(cellNumber, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
-                    weight.getFloat()));
-
-            TextView cellDest = new TextView(this);
-            cellDest.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.table_font_size));
-            cellDest.setGravity(Gravity.START);
-            cellDest.setText(String.format(Locale.US, "Auckland CBD %02d", i));
-            getResources().getValue(R.dimen.cell2_weight, weight, true);
-            row.addView(cellDest, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
-                    weight.getFloat()));
-
+            String content = String.format(Locale.US, "Auckland CBD %02d", i);
             Calendar cTime = Calendar.getInstance();
-            TextView cellTime1 = fillTime(cTime);
-            getResources().getValue(R.dimen.cell3_weight, weight, true);
-            row.addView(cellTime1, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
-                    weight.getFloat()));
 
-            TextView cellTime2 = fillTime(cTime);
-            getResources().getValue(R.dimen.cell3_weight, weight, true);
-            row.addView(cellTime2, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
-                    weight.getFloat()));
-
+            TableRow row = createRow(i, content, cTime, cTime);
             row.setClickable(true);
             row.setOnClickListener(this);
             tableLayout_create.addView(row);
         }
     }
 
-    private TextView fillTime(Calendar time) {
+    private TableRow createRow(int number, String content, Calendar t1, Calendar t2) {
+        TableRow row = new TableRow(this);
+        // Set layout
+        TableLayout.LayoutParams rowLayout = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT);
+        rowLayout.setMargins(getResources().getInteger(R.integer.table_row_left), getResources().getInteger(R.integer.table_row_top),
+                getResources().getInteger(R.integer.table_row_right), getResources().getInteger(R.integer.table_row_bottom));
+        row.setLayoutParams(rowLayout);
+
+        TypedValue weight = new TypedValue();
+        TextView cell = new TextView(this);
+        cell.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.table_font_size));
+        cell.setGravity(Gravity.CENTER);
+        String formattedName = String.format(Locale.US, "%04d", number);
+        cell.setText(formattedName);
+        getResources().getValue(R.dimen.cell1_weight, weight, true);
+        row.addView(cell, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
+                weight.getFloat()));
+
+        cell.setGravity(Gravity.START);
+        cell.setText(content);
+        getResources().getValue(R.dimen.cell2_weight, weight, true);
+        row.addView(cell, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
+                weight.getFloat()));
+
+        TextView cellTime = createTimeCell(t1);
+        getResources().getValue(R.dimen.cell3_weight, weight, true);
+        row.addView(cellTime, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
+                weight.getFloat()));
+
+        cellTime = createTimeCell(t2);
+        getResources().getValue(R.dimen.cell3_weight, weight, true);
+        row.addView(cellTime, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
+                weight.getFloat()));
+
+        return row;
+    }
+
+    private TextView createTimeCell(Calendar time) {
         TextView cellTime1 = new TextView(this);
         cellTime1.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.table_font_size));
         cellTime1.setGravity(Gravity.CENTER);
