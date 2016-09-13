@@ -14,6 +14,7 @@
     tools:showIn="@layout/activity_timetable">
 
     <TableLayout
+        android:id="@+id/tableTitle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:stretchColumns="*"
@@ -25,15 +26,16 @@
             android:layout_margin="@dimen/table_title_margin">
             <TextView
                 android:text="@string/no"
-                android:layout_weight="1"
+                android:layout_weight="@dimen/cell1_weight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/table_title_font_size"
+                android:gravity="center"
                 android:textColor="@color/cast_expanded_controller_text_color"
                 android:textStyle="bold"/>
             <TextView
                 android:text="@string/destination"
-                android:layout_weight="4"
+                android:layout_weight="@dimen/cell2_weight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/table_title_font_size"
@@ -41,21 +43,47 @@
                 android:textStyle="bold"/>
             <TextView
                 android:text="@string/sched"
-                android:layout_weight="1"
+                android:layout_weight="@dimen/cell3_weight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/table_title_font_size"
+                android:gravity="center"
                 android:textColor="@color/cast_expanded_controller_text_color"
                 android:textStyle="bold"/>
             <TextView
                 android:text="@string/due"
-                android:layout_weight="1"
+                android:layout_weight="@dimen/cell4_weight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/table_title_font_size"
+                android:gravity="center"
                 android:textColor="@color/cast_expanded_controller_text_color"
                 android:textStyle="bold"/>
         </TableRow>
     </TableLayout>
+
+    <ScrollView
+        android:id="@+id/tableScroll"
+        android:layout_below="@+id/tableTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:id="@+id/TableLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*"
+                android:shrinkColumns="*"
+                android:showDividers="middle"
+                android:divider="@drawable/table_divider_line"></TableLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
