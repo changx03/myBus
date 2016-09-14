@@ -26,10 +26,12 @@ public class MapsActivity extends AppCompatActivity
         ActivityCompat.OnRequestPermissionsResultCallback,
         GoogleMap.OnInfoWindowClickListener {
 
+    public static final String MARKER_ID = "MARKER_ID";
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
     private GoogleMap mMap;
     private boolean mPermissionDenied = false;
-    public static final String MARKER_ID = "MARKER_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

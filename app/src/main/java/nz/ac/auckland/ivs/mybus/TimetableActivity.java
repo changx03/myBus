@@ -1,5 +1,6 @@
 package nz.ac.auckland.ivs.mybus;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,6 +24,7 @@ import java.util.Locale;
 public class TimetableActivity extends AppCompatActivity
         implements TableRow.OnClickListener {
 
+    public final static String BUS_INDEX = "BUS_INDEX";
     private String marker_id;
 
     @Override
@@ -133,6 +135,11 @@ public class TimetableActivity extends AppCompatActivity
     public void onClick(View v) {
         TableRow row = (TableRow) v;
         row.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        Toast.makeText(this, ((TextView) row.getChildAt(0)).getText(), Toast.LENGTH_SHORT).show();
+        String busIndexStr = ((TextView) row.getChildAt(0)).getText().toString();
+        Toast.makeText(this, busIndexStr, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, BusRouteActivity.class);
+        intent.putExtra(BUS_INDEX, busIndexStr);
+        startActivity(intent);
     }
 }
