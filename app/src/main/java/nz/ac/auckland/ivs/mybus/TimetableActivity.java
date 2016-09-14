@@ -80,19 +80,21 @@ public class TimetableActivity extends AppCompatActivity
         row.setLayoutParams(rowLayout);
 
         TypedValue weight = new TypedValue();
-        TextView cell = new TextView(this);
-        cell.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.table_font_size));
-        cell.setGravity(Gravity.CENTER);
+        TextView cellNo = new TextView(this);
+        cellNo.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.table_font_size));
+        cellNo.setGravity(Gravity.CENTER);
         String formattedName = String.format(Locale.US, "%04d", number);
-        cell.setText(formattedName);
+        cellNo.setText(formattedName);
         getResources().getValue(R.dimen.cell1_weight, weight, true);
-        row.addView(cell, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
+        row.addView(cellNo, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
                 weight.getFloat()));
 
-        cell.setGravity(Gravity.START);
-        cell.setText(content);
+        TextView cellDest = new TextView(this);
+        cellDest.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.table_font_size));
+        cellDest.setGravity(Gravity.START);
+        cellDest.setText(content);
         getResources().getValue(R.dimen.cell2_weight, weight, true);
-        row.addView(cell, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
+        row.addView(cellDest, new TableRow.LayoutParams(0, TableLayout.LayoutParams.WRAP_CONTENT,
                 weight.getFloat()));
 
         TextView cellTime = createTimeCell(t1);
@@ -134,7 +136,6 @@ public class TimetableActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         TableRow row = (TableRow) v;
-        row.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
         String busIndexStr = ((TextView) row.getChildAt(0)).getText().toString();
         Toast.makeText(this, busIndexStr, Toast.LENGTH_SHORT).show();
 
