@@ -12,12 +12,12 @@
 
     <ProgressBar
         android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="20dp"
-        android:layout_gravity="top|center"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        style="@android:style/Widget.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:visibility="invisible" />
 
 </FrameLayout>
