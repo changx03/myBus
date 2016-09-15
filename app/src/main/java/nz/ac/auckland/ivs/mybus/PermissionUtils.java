@@ -24,13 +24,17 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
 
 /**
  * Utility class for access to runtime permissions.
  */
 public abstract class PermissionUtils {
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     /**
      * Requests the fine location permission. If a rationale with an additional explanation should
@@ -178,6 +182,16 @@ public abstract class PermissionUtils {
                         .show();
                 getActivity().finish();
             }
+        }
+    }
+
+    public static void enableMyLocation(GoogleMap map, AppCompatActivity activity) {
+        if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            PermissionUtils.requestPermission(activity, LOCATION_PERMISSION_REQUEST_CODE,
+                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+        } else if (map != null) {
+            map.setMyLocationEnabled(true);
         }
     }
 }

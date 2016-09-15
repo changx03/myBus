@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -25,7 +24,7 @@ public class TimetableActivity extends AppCompatActivity
         implements TableRow.OnClickListener {
 
     public final static String BUS_INDEX = "BUS_INDEX";
-    private String marker_id;
+    private String mMarker_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +44,9 @@ public class TimetableActivity extends AppCompatActivity
         });
 
         Bundle bundle = getIntent().getExtras();
-        marker_id = bundle.getString(MapsActivity.MARKER_ID);
+        mMarker_id = bundle.getString(MapsActivity.MARKER_ID);
         try {
-            getSupportActionBar().setTitle(marker_id);
+            getSupportActionBar().setTitle(mMarker_id);
         } catch (NullPointerException e) {
             System.out.print(e.toString());
         }

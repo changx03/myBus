@@ -10,6 +10,7 @@
     <integer name="table_row_right">5</integer>
     <integer name="table_row_top">3</integer>
     <integer name="table_row_bottom">3</integer>
+    <integer name="map_padding">100</integer>
     <item name="cell1_weight" format="float" type="dimen">1.5</item>
     <item name="cell2_weight" format="float" type="dimen">4.0</item>
     <item name="cell3_weight" format="float" type="dimen">1.5</item>

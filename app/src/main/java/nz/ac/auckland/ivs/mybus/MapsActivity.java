@@ -1,6 +1,7 @@
 package nz.ac.auckland.ivs.mybus;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -27,8 +28,7 @@ public class MapsActivity extends AppCompatActivity
         GoogleMap.OnInfoWindowClickListener {
 
     public static final String MARKER_ID = "MARKER_ID";
-
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    public static final LatLng AUCKLAND_UOA = new LatLng(-36.853315, 174.768416);
 
     private GoogleMap mMap;
     private boolean mPermissionDenied = false;
@@ -48,23 +48,12 @@ public class MapsActivity extends AppCompatActivity
         mMap = googleMap;
 
         // Move the camera to the University of Auckland
-        LatLng aucklandUoa = new LatLng(-36.853315, 174.768416);
-        mMap.addMarker(new MarkerOptions().position(aucklandUoa).title("the University of Auckland"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(aucklandUoa, 15));
+        mMap.addMarker(new MarkerOptions().position(AUCKLAND_UOA).title("the University of Auckland"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(AUCKLAND_UOA, 15));
 
         mMap.setOnMyLocationButtonClickListener(this);
-        enableMyLocation();
+        PermissionUtils.enableMyLocation(mMap, this);
         mMap.setOnInfoWindowClickListener(this);
-    }
-
-    private void enableMyLocation() {
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
-        } else if(mMap != null) {
-            mMap.setMyLocationEnabled(true);
-        }
     }
 
     @Override
@@ -74,14 +63,14 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+        if (requestCode != PermissionUtils.LOCATION_PERMISSION_REQUEST_CODE) {
             return;
         }
 
         if (PermissionUtils.isPermissionGranted(permissions, grantResults,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
             // Enable the my location layer if the permission has been granted.
-            enableMyLocation();
+            PermissionUtils.enableMyLocation(mMap, this);
         } else {
             // Display the missing permission error dialog when the fragments resume.
             mPermissionDenied = true;
