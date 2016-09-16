@@ -1,14 +1,17 @@
 package nz.ac.auckland.ivs.mybus;
 
 import android.Manifest;
-import android.app.Activity;
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -25,7 +28,8 @@ public class MapsActivity extends AppCompatActivity
         OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback,
-        GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnInfoWindowClickListener,
+        SearchView.OnQueryTextListener {
 
     public static final String MARKER_ID = "MARKER_ID";
     public static final LatLng AUCKLAND_UOA = new LatLng(-36.853315, 174.768416);
@@ -94,21 +98,43 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_map, menu);
+
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(this);
+            SearchManager sm = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            searchView.setSearchableInfo(sm.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
+            searchView.setIconifiedByDefault(false);
+        }
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if(menuItem.getItemId() == R.id.menu_search) {
+        if (menuItem.getItemId() == R.id.search) {
             Toast.makeText(this, "Search function goes here.", Toast.LENGTH_SHORT).show();
         }
-        if(menuItem.getItemId() == R.id.menu_refresh) {
+        if (menuItem.getItemId() == R.id.menu_refresh) {
             Toast.makeText(this, "Refresh function goes here.", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(menuItem);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Toast.makeText(this, "Searching by: " + query, Toast.LENGTH_SHORT).show();
+
+        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            String uri = intent.getDataString();
+            Toast.makeText(this, "Suggestion: " + uri, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
@@ -119,5 +145,15 @@ public class MapsActivity extends AppCompatActivity
         String dummyID = "0001";
         intent.putExtra(MARKER_ID, dummyID);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

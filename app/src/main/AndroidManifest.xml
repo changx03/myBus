@@ -30,6 +30,7 @@
 
         <activity
             android:name=".MapsActivity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_maps">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,7 +44,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".BusRouteActivity"
-            android:label="@string/title_activity_bus_route"></activity>
+            android:label="@string/title_activity_bus_route" />
+        <activity android:name=".SearchableActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
     </application>
 
 </manifest>

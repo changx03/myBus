@@ -14,4 +14,6 @@
     <string name="due">Due</string>
     <string name="title_activity_table">TableActivity</string>
     <string name="title_activity_bus_route">Bus Route</string>
+    <string name="search_hint">Enter bus stop No.</string>
+    <string name="search_textview">Search results</string>
 </resources>
