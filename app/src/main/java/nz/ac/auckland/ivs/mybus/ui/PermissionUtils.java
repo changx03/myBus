@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nz.ac.auckland.ivs.mybus;
+package nz.ac.auckland.ivs.mybus.ui;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -29,6 +29,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+
+import nz.ac.auckland.ivs.mybus.R;
 
 /**
  * Utility class for access to runtime permissions.

@@ -8,6 +8,6 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="nz.ac.auckland.ivs.mybus.MapsActivity" />
+        tools:context=".ui.MapsActivity" />
 
 </RelativeLayout>

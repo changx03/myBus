@@ -1,4 +1,4 @@
-package nz.ac.auckland.ivs.mybus;
+package nz.ac.auckland.ivs.mybus.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Locale;
+
+import nz.ac.auckland.ivs.mybus.R;
 
 public class TimetableActivity extends AppCompatActivity
         implements TableRow.OnClickListener {

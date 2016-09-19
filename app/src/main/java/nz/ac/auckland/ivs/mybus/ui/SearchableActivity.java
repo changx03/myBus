@@ -1,4 +1,4 @@
-package nz.ac.auckland.ivs.mybus;
+package nz.ac.auckland.ivs.mybus.ui;
 
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
+
+import nz.ac.auckland.ivs.mybus.R;
 
 public class SearchableActivity extends AppCompatActivity {
 

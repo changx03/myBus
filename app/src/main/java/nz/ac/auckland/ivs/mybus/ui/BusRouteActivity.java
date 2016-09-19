@@ -1,4 +1,4 @@
-package nz.ac.auckland.ivs.mybus;
+package nz.ac.auckland.ivs.mybus.ui;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -31,6 +31,8 @@ import com.google.maps.model.SnappedPoint;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import nz.ac.auckland.ivs.mybus.R;
 
 public class BusRouteActivity extends AppCompatActivity
         implements OnMapReadyCallback,

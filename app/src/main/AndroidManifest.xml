@@ -29,7 +29,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".ui.MapsActivity"
             android:launchMode="singleTop"
             android:label="@string/title_activity_maps">
             <intent-filter>
@@ -39,13 +39,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TimetableActivity"
+            android:name=".ui.TimetableActivity"
             android:label="@string/title_activity_timetable"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".BusRouteActivity"
+            android:name=".ui.BusRouteActivity"
             android:label="@string/title_activity_bus_route" />
-        <activity android:name=".SearchableActivity">
+        <activity android:name=".ui.SearchableActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

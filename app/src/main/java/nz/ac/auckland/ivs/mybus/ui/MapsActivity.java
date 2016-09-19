@@ -1,13 +1,13 @@
-package nz.ac.auckland.ivs.mybus;
+package nz.ac.auckland.ivs.mybus.ui;
 
 import android.Manifest;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -22,6 +22,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import nz.ac.auckland.ivs.mybus.R;
+import nz.ac.auckland.ivs.mybus.db.DatabaseHelper;
+import nz.ac.auckland.ivs.mybus.db.DbTableContract;
 
 public class MapsActivity extends AppCompatActivity
         implements
@@ -45,6 +52,36 @@ public class MapsActivity extends AppCompatActivity
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        try {
+            databaseHelper.createDatabase();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        try {
+//            databaseHelper.openDatabase();
+            long rows = databaseHelper.getProfilesCount();
+            System.out.println("db rows = " + rows);
+        } catch (SQLiteException e) {
+            System.err.println(e.getMessage());
+        }
+
+//        // Debug: assets test
+//        System.out.println("debug starts:");
+//        String filesDir = getFilesDir().getPath();
+//        String databaseDir = filesDir.substring(0, filesDir.lastIndexOf("/")) + "/databases/";
+//        System.out.println(databaseDir);
+//        InputStream inputStream = null;
+//        try {
+//            inputStream = getAssets().open(DbTableContract.DB_NAME + ".db");
+//
+//            byte[] b = new byte[128];
+//            inputStream.read(b);
+//        } catch (IOException e) {
+//            System.err.println(e.getMessage());
+//        }
     }
 
     @Override
