@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -20,23 +21,27 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import nz.ac.auckland.ivs.mybus.R;
 import nz.ac.auckland.ivs.mybus.db.DatabaseHelper;
 import nz.ac.auckland.ivs.mybus.db.DbTableContract;
+import nz.ac.auckland.ivs.mybus.model.BusStop;
 
-public class MapsActivity extends AppCompatActivity
-        implements
+public class MapsActivity extends AppCompatActivity implements
         OnMapReadyCallback,
-        GoogleMap.OnMyLocationButtonClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback,
+        SearchView.OnQueryTextListener,
+        GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnInfoWindowClickListener,
-        SearchView.OnQueryTextListener {
+        GoogleMap.OnCameraIdleListener {
 
     public static final String MARKER_ID = "MARKER_ID";
     public static final LatLng AUCKLAND_UOA = new LatLng(-36.853315, 174.768416);
@@ -44,57 +49,53 @@ public class MapsActivity extends AppCompatActivity
     private GoogleMap mMap;
     private boolean mPermissionDenied = false;
 
+    private ClusterManager<BusStop> mClusterManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        setUpMap();
 
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-
-        DatabaseHelper databaseHelper = new DatabaseHelper(this);
-        try {
-            databaseHelper.createDatabase();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-        try {
-//            databaseHelper.openDatabase();
-            long rows = databaseHelper.getProfilesCount();
-            System.out.println("db rows = " + rows);
-        } catch (SQLiteException e) {
-            System.err.println(e.getMessage());
-        }
-
-//        // Debug: assets test
-//        System.out.println("debug starts:");
-//        String filesDir = getFilesDir().getPath();
-//        String databaseDir = filesDir.substring(0, filesDir.lastIndexOf("/")) + "/databases/";
-//        System.out.println(databaseDir);
-//        InputStream inputStream = null;
+        // Load bus stops from database
+//        DatabaseHelper databaseHelper = new DatabaseHelper(this);
 //        try {
-//            inputStream = getAssets().open(DbTableContract.DB_NAME + ".db");
-//
-//            byte[] b = new byte[128];
-//            inputStream.read(b);
+//            databaseHelper.createDatabase();
 //        } catch (IOException e) {
+//            System.err.println(e.getMessage());
+//        }
+//        try {
+//            long rows = databaseHelper.getProfilesCount();
+//            System.out.println("db rows = " + rows);
+//        } catch (SQLiteException e) {
 //            System.err.println(e.getMessage());
 //        }
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        setUpMap();
+    }
+
+    private void setUpMap() {
+        ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
+        if (mMap != null) {
+            return;
+        }
         mMap = googleMap;
+        PermissionUtils.enableMyLocation(mMap, this);
 
         // Move the camera to the University of Auckland
-        mMap.addMarker(new MarkerOptions().position(AUCKLAND_UOA).title("the University of Auckland"));
+//        mMap.addMarker(new MarkerOptions().position(AUCKLAND_UOA).title("the University of Auckland"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(AUCKLAND_UOA, 15));
-
         mMap.setOnMyLocationButtonClickListener(this);
-        PermissionUtils.enableMyLocation(mMap, this);
-        mMap.setOnInfoWindowClickListener(this);
+
+        loadBusStops();
     }
 
     @Override
@@ -103,7 +104,7 @@ public class MapsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != PermissionUtils.LOCATION_PERMISSION_REQUEST_CODE) {
             return;
         }
@@ -192,5 +193,55 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+
+    @Override
+    public void onCameraIdle() {
+        LatLngBounds currentBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+//        showMarkers(currentBounds);
+
+        mMap.clear();
+        mClusterManager.clearItems();
+        System.out.println("onCameraIdle=> clear!");
+    }
+
+    private void loadBusStops() {
+        mClusterManager = new ClusterManager<BusStop>(this, mMap);
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnInfoWindowClickListener(mClusterManager);
+        addItem();
+    }
+
+    private void addItem() {
+//        LatLngBounds currentBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+//        LatLng sw = currentBounds.southwest;
+//        LatLng ne = currentBounds.northeast;
+
+        BusStop offsetItem = new BusStop(new LatLng(-36.850984, 174.765015));  // 0
+        mClusterManager.addItem(offsetItem);
+        offsetItem = new BusStop(new LatLng(-36.852796, 174.767364));
+        mClusterManager.addItem(offsetItem);
+        offsetItem = new BusStop(new LatLng(-36.854178, 174.768083));
+        mClusterManager.addItem(offsetItem);
+        offsetItem = new BusStop(new LatLng(-36.856625, 174.765422));
+        mClusterManager.addItem(offsetItem);
+        offsetItem = new BusStop(new LatLng(-36.857921, 174.76392));   // 4
+        mClusterManager.addItem(offsetItem);
+        offsetItem = new BusStop(new LatLng(-36.857930, 174.760970));
+        mClusterManager.addItem(offsetItem);
+        offsetItem = new BusStop(new LatLng(-36.857578, 174.758288));
+        mClusterManager.addItem(offsetItem);
+    }
+
+    public void showMarkers(LatLngBounds currentBounds) {
+        LatLng sw = currentBounds.southwest;
+        LatLng ne = currentBounds.northeast;
+        System.out.println(String.format(Locale.US, "showMarkers=> sw = (%f, %f); ne = (%f, %f)",
+                sw.latitude, sw.longitude, ne.latitude, ne.longitude));
+
+        // test add a marker here!
+        mMap.addMarker(new MarkerOptions().position(sw).title("sw"));
+        mMap.addMarker(new MarkerOptions().position(ne).title("ne"));
     }
 }
